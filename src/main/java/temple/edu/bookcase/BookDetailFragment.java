@@ -15,8 +15,8 @@ import java.io.InputStream;
 import androidx.fragment.app.Fragment;
 
 public class BookDetailFragment extends Fragment {
-    private static final String ID = "param1";
-    private static final String TITLE = "param2";
+    //private static final String ID = "param1";
+    private static final String TITLE = "param1";
     private static final String AUTHOR = "param3";
     private static final String PUBLISHED = "param4";
     private static final String COVERURL = "param5";
@@ -41,7 +41,7 @@ public class BookDetailFragment extends Fragment {
     public static BookDetailFragment newInstance(Book book) {
         BookDetailFragment fragment = new BookDetailFragment();
         Bundle args = new Bundle();
-        args.putInt(ID, book.id);
+        //args.putInt(ID, book.id);
         args.putSerializable(BOOK, book);
         /*args.putString(TITLE, book.title);
         args.putString(AUTHOR, book.author);
@@ -73,7 +73,7 @@ public class BookDetailFragment extends Fragment {
         if(book.title != null)
             textView3.setText(book.published+"");
         else
-            textView4.setText(null);
+            textView3.setText(null);
         new DownloadImageTask(bookCover).execute(book.coverURL);
 //        bookCover.setImageDrawable(getImage(book.coverURL));
 //        bookCover.setImageURI(book.coverURL);

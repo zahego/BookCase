@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements BookListFragment.OnFragmentInteractionListener {
 
     BookListFragment bookListFragment;
-    BookDetailFragment bookDetailsFragment;
+    BookDetailFragment bookDetailFragment;
     ViewPageFragment viewPageFragment;
     Fragment f;
     Book theBook;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     RequestQueue requestQueue;
     boolean allBooksLoaded;
     FragmentManager fm;
-    boolean onePane;
+    boolean portrait;
     Button searchButton;
     EditText searchText;
     String URL;
@@ -54,13 +54,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        onePane = findViewById(R.id.container_2) == null;
+        portrait = findViewById(R.id.container_2) == null;
 
         allBooksLoaded = false;
         URL = "https://kamorris.com/lab/audlib/booksearch.php?search=";
         requestQueue = Volley.newRequestQueue(this);
         theBook = new Book(-1, null, null, -1, null);
-        bookDetailsFragment = BookDetailFragment.newInstance(theBook);
+        bookDetailFragment = BookDetailFragment.newInstance(theBook);
         searchButton = findViewById(R.id.searchButton);
         searchText = findViewById(R.id.searchText);
 
@@ -82,19 +82,19 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                                 current1 = (Fetchable) fm.findFragmentById(R.id.container_1);
                                 current2 = fm.findFragmentById(R.id.container_2);
                                 // Fragments already exist (activity was restarted)
-                                if (onePane) {
+                                if (portrait) {
                                     Log.i("UUUU", "current1 is booklistfragment");
                                     fm.beginTransaction()
                                             .remove((Fragment) current1)
                                             .add(R.id.container_1, ViewPageFragment.newInstance(bookList))
                                             .commit();
                                 } else {
-                                    bookDetailsFragment = BookDetailFragment.newInstance(theBook);
+                                    bookDetailFragment = BookDetailFragment.newInstance(theBook);
                                     fm.beginTransaction()
                                             .remove((Fragment) current1)
                                             .remove(current2)
                                             .add(R.id.container_1, BookListFragment.newInstance(bookList))
-                                            .add(R.id.container_2, bookDetailsFragment)
+                                            .add(R.id.container_2, bookDetailFragment)
                                             .commit();
                                 }
                             }
@@ -122,22 +122,22 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                             Log.e("UUUU", "First line in onResponse");
                             bookList = makeBookList(response);
 //                            bookListFragment = BookListFragment.newInstance(bookList);
-//                            bookDetailsFragment = BookDetailsFragment.newInstance(theBook);
+//                            bookDetailFragment = BookDetailFragment.newInstance(theBook);
 //                            viewPageFragment = ViewPageFragment.newInstance(bookList);
 
 
                             FragmentTransaction ft= fm.beginTransaction();
 //                            ConstraintLayout container_2 = (ConstraintLayout) findViewById(R.id.container_2);
 
-                            if (onePane) {
+                            if (portrait) {
                                 fm.beginTransaction()
                                         .add(R.id.container_1, ViewPageFragment.newInstance(bookList))
                                         .commit();
                             } else {
-                                bookDetailsFragment = BookDetailFragment.newInstance(theBook);
+                                bookDetailFragment = BookDetailFragment.newInstance(theBook);
                                 fm.beginTransaction()
                                         .add(R.id.container_1, BookListFragment.newInstance(bookList))
-                                        .add(R.id.container_2, bookDetailsFragment)
+                                        .add(R.id.container_2, bookDetailFragment)
                                         .commit();
                             }
 
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         } else {
             // Fragments already exist (activity was restarted)
             bookList = current1.getBooks();
-            if (onePane) {
+            if (portrait) {
                 if (current1 instanceof BookListFragment) {
                     // If we have the wrong fragment for this configuration, remove it and add the correct one
                     fm.beginTransaction()
@@ -173,16 +173,16 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                             .commit();
                 }
                 if (current2 instanceof BookDetailFragment)
-                    bookDetailsFragment = (BookDetailFragment) current2;
+                    bookDetailFragment = (BookDetailFragment) current2;
                 else {
-                    bookDetailsFragment = BookDetailFragment.newInstance(theBook);
+                    bookDetailFragment = BookDetailFragment.newInstance(theBook);
                     fm.beginTransaction()
-                            .add(R.id.container_2, bookDetailsFragment)
+                            .add(R.id.container_2, bookDetailFragment)
                             .commit();
                 }
             }
 
-//            bookDetailsFragment = (BookDetailsFragment) current2;
+//            bookDetailFragment = (BookDetailFragment) current2;
 
         }
     }
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     @Override
     public void onFragmentInteraction(int index) {
         Log.d("UUUU" ,"Book index:" + index);
-        bookDetailsFragment.displayBook(bookList.get(index));
+        bookDetailFragment.displayBook(bookList.get(index));
     }
 
     ArrayList<Book> makeBookList(JSONArray response){

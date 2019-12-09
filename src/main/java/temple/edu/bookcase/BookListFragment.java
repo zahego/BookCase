@@ -70,7 +70,6 @@ public class BookListFragment extends Fragment implements Fetchable{
         return books;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(int index) {
         if (mListener != null) {
             mListener.onFragmentInteraction(index);
@@ -105,7 +104,6 @@ public class BookListFragment extends Fragment implements Fetchable{
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(int index);
     }
 }
