@@ -9,15 +9,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import androidx.fragment.app.Fragment;
 
-public class BookListFragment extends Fragment {
+public class BookListFragment extends Fragment implements Fetchable{
     private static final String BOOKS = "books";
 //    private static final String ARG_PARAM2 = "param2";
 
     private OnFragmentInteractionListener mListener;
 
-    String[] books;
+    ArrayList<Book> books;
 
     public BookListFragment() {
         // Required empty public constructor
@@ -25,10 +27,10 @@ public class BookListFragment extends Fragment {
 
 
     // TODO: Rename and change types and number of parameters
-    public static BookListFragment newInstance(String[] books) {
+    public static BookListFragment newInstance(ArrayList<Book> books) {
         BookListFragment fragment = new BookListFragment();
         Bundle args = new Bundle();
-        args.putStringArray(BOOKS, books);
+        args.putSerializable(BOOKS, books);
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,7 +39,7 @@ public class BookListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            books = getArguments().getStringArray(BOOKS);
+            books = (ArrayList<Book>) getArguments().getSerializable(BOOKS);
         }
     }
 
@@ -48,7 +50,11 @@ public class BookListFragment extends Fragment {
         View view = inflater.inflate(R.layout.book_list_fragment, container, false);
 
         ListView listView = view.findViewById(R.id.ListView);
-        ArrayAdapter adapter = new ArrayAdapter((Context) mListener, android.R.layout.simple_list_item_1, books);
+        ArrayList<String> bookTitles = new ArrayList<>();
+        for(Book book : books){
+            bookTitles.add(book.title);
+        }
+        ArrayAdapter adapter = new ArrayAdapter((Context) mListener, android.R.layout.simple_list_item_1, bookTitles);;
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -58,6 +64,10 @@ public class BookListFragment extends Fragment {
         });
 
         return view;
+    }
+    @Override
+    public ArrayList<Book> getBooks() {
+        return books;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
