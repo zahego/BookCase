@@ -33,14 +33,15 @@ public class BookDetailFragment extends Fragment {
     private TextView textView4;
     private ImageView bookCover;
     private Button startButton;
+    private Button downloadDeleteButton;
     private AudioStartInterface fragmentParent;
 
 
 
 
     public BookDetailFragment() {
-        // Required empty public constructor
-        this.book = book;
+        //this.book = book;
+
     }
 
     public static BookDetailFragment newInstance(Book book) {
@@ -80,8 +81,15 @@ public class BookDetailFragment extends Fragment {
         else
             textView3.setText(null);
         new DownloadImageTask(bookCover).execute(book.coverURL);
+
 //        bookCover.setImageDrawable(getImage(book.coverURL));
 //        bookCover.setImageURI(book.coverURL);
+        this.book = book;
+        if(book.downloaded){
+            downloadDeleteButton.setText("delete");
+        } else{
+            downloadDeleteButton.setText("download");
+        }
 
 
         //textView.setText(title);
@@ -100,11 +108,26 @@ public class BookDetailFragment extends Fragment {
         //textView4 = view.findViewById(R.id.BookCOVERURLTextView);
         bookCover = view.findViewById(R.id.bookCover);
         startButton = view.findViewById(R.id.startButton);
+        downloadDeleteButton = view.findViewById(R.id.downloadDeleteButton);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(fragmentParent != null) {
                     fragmentParent.startAudio(book.id);
+                }
+            }
+        });
+
+        downloadDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(fragmentParent != null){
+                    book.downloaded = fragmentParent.downloadDelete(book.id);
+                    Log.e("downloaded",""+book.downloaded);
+                    if(book.downloaded)
+                        downloadDeleteButton.setText("delete");
+                    else
+                        downloadDeleteButton.setText("download");
                 }
             }
         });
@@ -130,6 +153,7 @@ public class BookDetailFragment extends Fragment {
     }
     public interface AudioStartInterface {
         void startAudio(int id);
+        boolean downloadDelete(int id);
     }
     public Bitmap getImage(String url){
         Bitmap mIcon11 = null;
